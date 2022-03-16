@@ -1,30 +1,39 @@
 package queue
 
-import "fmt"
+import (
+	"github.com/syakter/go-data-structures/iter"
+	"github.com/syakter/go-data-structures/list"
+)
 
-type Queue[T any] []T
-
-func (q *Queue[T]) enqueue(v T) {
-	*q = append(*q, v)
+type Queue[T any] struct {
+	list *list.List[T]
 }
 
-func (q *Queue[T]) dequeue() (T, bool) {
-	if len(*q) == 0 {
-		var v T
-		return v, false
+func New[T any]() *Queue[T] {
+	return &Queue[T]{
+		list: list.New[T](),
 	}
-	v := (*q)[0]
-	*q = (*q)[1:]
-	return v, true
 }
 
-func main() {
-	q := new(Queue[string])
-	q.enqueue("item-1")
-	q.enqueue("item-2")
-	q.enqueue("item-3")
-	fmt.Println(q)
-	fmt.Println(q.dequeue())
-	fmt.Println(q.dequeue())
-	fmt.Println(q)
+func (q *Queue[T]) Enqueue(value T) {
+	q.list.PushBack(value)
+}
+
+func (q *Queue[T]) Dequeue() T {
+	value := q.list.Front.Value
+	q.list.Remove(q.list.Front)
+
+	return value
+}
+
+func (q *Queue[T]) Peek() T {
+	return q.list.Front.Value
+}
+
+func (q *Queue[T]) Empty() bool {
+	return q.list.Front == nil
+}
+
+func (q *Queue[T]) Iter() iter.Iter[T] {
+	return q.list.Front.Iter()
 }

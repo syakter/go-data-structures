@@ -6,10 +6,11 @@ import (
 	"testing"
 
 	g "github.com/syakter/go-data-structures/generic"
+	"github.com/syakter/go-data-structures/hashmap"
 )
 
-func checkeq[K any, V comparable](cm *Map[K, V], get func(k K) (V, bool), t *testing.T) {
-	cm.Iter().For(func(kv KV[K, V]) {
+func checkeq[K any, V comparable](cm *hashmap.Map[K, V], get func(k K) (V, bool), t *testing.T) {
+	cm.Iter().For(func(kv hashmap.KV[K, V]) {
 		if ov, ok := get(kv.Key); !ok {
 			t.Fatalf("key %v should exist", kv.Key)
 		} else if kv.Val != ov {
@@ -20,7 +21,7 @@ func checkeq[K any, V comparable](cm *Map[K, V], get func(k K) (V, bool), t *tes
 
 func TestCrossCheck(t *testing.T) {
 	stdm := make(map[uint64]uint32)
-	cowm := NewMap[uint64, uint32](1, g.Equals[uint64], g.HashUint64)
+	cowm := hashmap.NewMap[uint64, uint32](1, g.Equals[uint64], g.HashUint64)
 
 	const nops = 1000
 
@@ -51,7 +52,7 @@ func TestCrossCheck(t *testing.T) {
 }
 
 func TestCopy(t *testing.T) {
-	orig := NewMap[uint64, uint32](1, g.Equals[uint64], g.HashUint64)
+	orig := hashmap.NewMap[uint64, uint32](1, g.Equals[uint64], g.HashUint64)
 
 	for i := uint32(0); i < 10; i++ {
 		orig.Put(uint64(i), i)
@@ -69,7 +70,7 @@ func TestCopy(t *testing.T) {
 }
 
 func Example() {
-	m := NewMap[string, int](1, g.Equals[string], g.HashString)
+	m := hashmap.NewMap[string, int](1, g.Equals[string], g.HashString)
 	m.Put("foo", 42)
 	m.Put("bar", 13)
 
